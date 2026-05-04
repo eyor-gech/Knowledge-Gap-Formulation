@@ -1,0 +1,7 @@
+# Evening Call Summary — Day 1
+
+## Topic: KV Cache Mechanics — End-of-Day Critique and Revision
+
+---
+
+The explainer was reviewed against the question's four criteria. The mechanism section was strong — the O(n²) vs. O(n) asymmetry was traced precisely, and the tensor shape walkthrough (`batch, heads, seq_len, head_dim`) made the storage structure concrete rather than abstract. However, the first draft's treatment of multi-turn agent systems had a critical gap: it implied that prefix caching across API calls is a standard feature, when in fact it requires explicit infrastructure support and is **not** enabled by default in most self-hosted deployments; this was revised to make the conditional explicit and to name the divergence between within-generation caching (always present) and cross-request prefix caching (infrastructure-dependent). A second critique: the trade-off section initially framed memory cost as "potentially significant" — vague language that was replaced with a concrete per-token calculation and a comparison to model weight size, which makes the cost tangible to an infrastructure engineer. The thread was also tightened: Tweet 4 originally said "intermediate representations" which is ambiguous — this was corrected to "projection tensors `X @ W_K` and `X @ W_V`", which is the accurate and defensible term. No scope expansion occurred; GQA, PagedAttention, and speculative decoding remain intentionally excluded.
